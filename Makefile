@@ -1,10 +1,10 @@
+# 
 
+output: Source.o
+	g++ Source.o -o output
 
-output: source.o
-	g++ source.o -o output
-
-source.o: source.cpp process.h memblock.h
-	g++ -c source.cpp
+Source.o: Source.cpp process.h memblock.h
+	g++ -c Source.cpp
 
 clean:
 	rm *.o output

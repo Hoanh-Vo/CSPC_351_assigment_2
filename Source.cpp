@@ -2,6 +2,7 @@
 #include<iostream>
 #include<string>
 #include<queue>
+#include<algorithm>
 #include"memblock.h"
 #include"process.h"
 using namespace std;
@@ -152,6 +153,7 @@ void addUniqueCriticalPoint(vector<long>&points, long val)
 	{
 		points.push_back(val);
 	}
+	
 }
 
 void printInputQueue(vector<process> q)
