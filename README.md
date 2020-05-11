@@ -14,20 +14,10 @@ Linux               - Visual Studio Code
 
 ## Team collaborate on project
 
-## Individual Task:
-
-_Hoanh Vo:
-
-
-_Uyen Le:
-
-_Tram Nguyen:
-
-
-
 ## Team Task:
 
 - Readme file
-- Design of Assignment 2     
+- Design of Assignment 2  
+- Coding
  
 
