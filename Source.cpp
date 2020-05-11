@@ -3,18 +3,18 @@
 #include<string>
 #include<queue>
 #include<algorithm>
-#include"memblock.h"
+#include"memoryBlock.h"
 #include"process.h"
 using namespace std;
 
-void addUniqueCriticalPoint(vector<long>&points, long val);
-void printInputQueue(vector<process> q);
+void addUniqueCriticalPoint(vector<long>&points, long val);	//add processes' arrival time
+void printInputQueue(vector<process> q); //print processes to the screen
 
 int main()
 {
 	int memory_size;
 	int pageSize = 0;
-	int numProcesses = 0;
+	int numProcesses = 0;	//numbers of processes in int1.txt
 	int initialNumprocesses = 0;
 	fstream  file;		//reading file
 	
@@ -27,11 +27,11 @@ int main()
 		return 1;
 	}
 	//Add processes into FIFO queue
-	queue<process>processQueue;
-	vector<process>inputQueue;
+	queue<process>processQueue; //store processes from the input file
+	vector<process>inputQueue;	//store the executed processes
 	vector<long>criticalList;  //store the criticalpoints
-	vector<memblock>mmu;
-	vector<process>processesInMemory;
+	vector<memblock>mmu;	//
+	vector<process>processesInMemory;	//processes in memory
 
 	double totalTurnarroundTime = 0.0;
 
@@ -65,7 +65,8 @@ int main()
 
 	} while (pageSize == 0);
 
-//Initualize MMU with value: 0
+//Initualize MMU with the size = number of possible pages in memory (memory_size/pageSize)
+//initiate with 0 values
 	for (int i = 0; i < (memory_size / pageSize); i++)
 	{
 		memblock m1;
@@ -74,27 +75,30 @@ int main()
 		mmu.push_back(m1);
 	}
 
-	file >> numProcesses;			//read number of processes in in1.txt
+	file >> numProcesses;			//read processes's number in in1.txt
 
 	cout << "Num of Processes = " << numProcesses << endl;
 
-	initialNumprocesses = numProcesses;
+	initialNumprocesses = numProcesses;		//total processes in int1.txt 
 
+
+//read data  processes in input file in1.txt and create the processes accordingly
 	while (!file.eof() && numProcesses != 0)
 	{
-		int numMemoryPieces = 0;
+		int numMemoryPieces = 0; // number of repeated processes 
 		process p1;
-		file >> p1.processNum;
-		cout << "Process number: " << p1.processNum << endl;
+		file >> p1.processNum;	//process id#
 		file >> p1.arrivalTime;
-		cout << "Process arrivial time: " << p1.arrivalTime << endl;
 		file >> p1.burstTime;
-		cout << "Process burt-time: " << p1.burstTime << endl;
 		file >> numMemoryPieces;
-	
-		cout << "Num memoryPieces = " << numMemoryPieces << endl;	
-		p1.memoryNeed = 0;
 
+ 		 cout << "processNum: " << p1.processNum << "\n";
+        cout << "arrivalTime: " << p1.arrivalTime << "\n";
+        cout << "burstTime: " << p1.burstTime << "\n";
+        cout << "memoryNeed: " << p1.memoryNeed << "\n";
+	
+		p1.memoryNeed = 0;
+// combine all the memory needed if there more than 1 repeated processes  
 		for (int i = 0; i < numMemoryPieces; i++)
 		{
 			int memoryPiece;
@@ -102,43 +106,43 @@ int main()
 			p1.memoryNeed += memoryPiece;
 			cout << "memory Need = " << p1.memoryNeed << endl;
 		}
-		
+		//add all processes to FIFO queue
 		processQueue.push(p1);
+		
 		//add arrival time to criticalpoints list if arrival time not ready in criticalpoints list
 		addUniqueCriticalPoint(criticalList, p1.arrivalTime);
 
 		numProcesses--;
 	}
 
-	//loop through the criticalpoints list
+
+	//loop through the criticalpoints list and execute the processes
 	while (!criticalList.empty())
 	{
-		bool tLine = true;
+		bool tLine = true;	//
 		bool arrivalOnly = true;
-		long currentCriticalPoint = criticalList.front();
+		long currentCriticalPoint = criticalList.front();	//the first process's arrival time
 		cout << " t = " << currentCriticalPoint << ": ";
 
-		//move process from processQueue to inputQueue if criticalPoint matches arrival time, else it must be a completion time 
-		process currentProcess = processQueue.front();
+		
+		process currentProcess = processQueue.front(); //copy the first process in the 	queue
+
+//the the arrival time of the first process match with the time of the process in the queue
 		while (currentProcess.arrivalTime == currentCriticalPoint)
 		{
 			processQueue.pop();
 			inputQueue.push_back(currentProcess);
-			if (tLine)
-			{
-				tLine = false;
-			}
-			else {
-				cout << "\t";
-			}
+			
 			cout << "Process " << currentProcess.processNum << " arrives" << endl;
-			printInputQueue(inputQueue);
-
-
+			printInputQueue(inputQueue);  //print out executed processes's id number 
+			currentProcess = processQueue.front();
 		}
 
+		criticalList.pop_back();
 	}
-	system("pause");
+	
+	//system("pause");
+
 	return 0;
 
 }
@@ -156,6 +160,7 @@ void addUniqueCriticalPoint(vector<long>&points, long val)
 	
 }
 
+//this function print out all the the procecces's ID number   onto the screen
 void printInputQueue(vector<process> q)
 {
 	cout << " \tInput Queue: [";
