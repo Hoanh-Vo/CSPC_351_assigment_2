@@ -125,7 +125,7 @@ int main()
 		cout << " t = " << currentCriticalPoint << ": ";
 
 		
-		process currentProcess = processQueue.front(); //copy the first process in the 	queue
+		process currentProcess = processQueue.front(); //the first process in the queue
 
 //the the arrival time of the first process match with the time of the process in the queue
 		while (currentProcess.arrivalTime == currentCriticalPoint)
@@ -137,9 +137,16 @@ int main()
 			printInputQueue(inputQueue);  //print out executed processes's id number 
 			currentProcess = processQueue.front();
 		}
+//loop through MMU 
+		for(auto i = processesInMemory.begin(); i != processesInMemory.end();i++)
+		{
+			currentProcess = *i;
 
+		}
 		criticalList.pop_back();
 	}
+	
+
 	
 	//system("pause");
 
