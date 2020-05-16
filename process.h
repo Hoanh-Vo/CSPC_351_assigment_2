@@ -25,8 +25,8 @@ struct process
 
 	friend std::ostream& operator << (std::ostream& os, process& p) {
 		os << "Process Number: " << p.processNum << "\n";
-        os << "\tArrival Time: " << p.arrivalTime << "\n";
-        os << "\tLife Time: " << p.lifeTime << "\n";
+        	os << "\tArrival Time: " << p.arrivalTime << "\n";
+        	os << "\tLife Time: " << p.lifeTime << "\n";
 		os << "\tMemory Need = " << p.memoryNeed << "\n";
 		return os;
 	}
