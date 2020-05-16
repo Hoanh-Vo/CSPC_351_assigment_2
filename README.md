@@ -11,6 +11,8 @@ Programing Language - C++
 Linux               - Visual Studio Code
 
 ## How to run the program:                       
+step 1: make
+Step 2: ./output
 
 ## Team collaborate on project
 
