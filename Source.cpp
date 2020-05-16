@@ -5,8 +5,9 @@
 #include"memoryBlock.h"
 #include"process.h"
 
-void addCriticalPoint(std::vector<long>&points, long val);	//Add processes' arrival time
+void addCriticalPoint(std::vector<long>& critList, long time);	//Add processes' arrival time
 void printInputQueue(std::vector<process> q); //Print processes to the screen
+void getUserInput(int &ms, int &ps); //Gets user input
 
 int main()
 {
@@ -23,34 +24,7 @@ int main()
 	std::vector<memblock>mmu;	
 	std::vector<process>processesInMemory;			//Processes in memory
 
-	//Prompt user to input size for the memory (MMU memory size)
-	std::cout << "Memory size >> ";
-	std::cin >> memory_size;
-	std::cout << "\n";
-
-	//Prompt user to choose the size for the page.
-	do
-	{
-		int pageInput;
-		std::cout << "Page Size (1: 100, 2: 200, 3: 400) >> ";
-		std::cin >> pageInput;
-
-		switch (pageInput)
-		{
-		case 1:
-			pageSize = 100;
-			break;
-		case 2:
-			pageSize = 200;
-			break;
-		case 3:
-			pageSize = 300;
-			break;
-		default:
-			pageSize = 0;
-			std::cout << "ERROR:  Please enter a valid value (1,2, or 3).\n";
-		}
-	} while (pageSize == 0);
+	getUserInput(memory_size, pageSize);
 
 	//Initualize MMU with the size = number of possible pages in memory (memory_size/pageSize)
 	//Initiatize with 0 values
@@ -72,34 +46,16 @@ int main()
 		return 1;
 	}
 
-	file >> numProcesses;			//Read processes's number in in1.txt
+	file >> numProcesses;							//Read processes's number in in1.txt
 	std::cout << "Num of Processes = " << numProcesses << "\n";
 
 	//Read data  processes in input file in1.txt and create the processes accordingly
 	while (!file.eof() && numProcesses != 0)
 	{
-		int num_mem = 0; 			//Number of repeated processes 
 		process p;
-		file >> p.processNum;		//Process ID#
-		file >> p.arrivalTime;
-		file >> p.lifeTime;
-		file >> num_mem;
-
- 		std::cout << "Process Number: " << p.processNum << "\n";
-        std::cout << "\tArrival Time: " << p.arrivalTime << "\n";
-        std::cout << "\tLife Time: " << p.lifeTime << "\n";
-	
-		p.memoryNeed = 0;
-
-		//Combine all the memory needed if there more than 1 repeated processes  
-		for (int i = 0; i < num_mem; i++)
-		{
-			int mem_need;
-			file >> mem_need;
-			p.memoryNeed += mem_need;
-		}
-		std::cout << "\tMemory Need = " << p.memoryNeed << "\n";
-
+		file >> p;
+		std::cout << p;
+		
 		//Add all processes to FIFO queue
 		processQueue.push(p);
 		
@@ -112,8 +68,8 @@ int main()
 	//Loop through the criticalpoints list and execute the processes
 	while (!criticalList.empty())
 	{
-		bool tLine = true;	//
-		bool arrivalOnly = true;
+		//bool tLine = true;	
+		//bool arrivalOnly = true;
 		long currentCriticalPoint = criticalList.front();		//The first process's arrival time
 		std::cout << " t = " << currentCriticalPoint << ": ";
 
@@ -146,14 +102,14 @@ int main()
 }
 
 //This function add arrival time in the critical list if it is not exist the list 
-void addCriticalPoint(std::vector<long>&points, long val)
+void addCriticalPoint(std::vector<long>& critList, long time)
 {
 	//Check if the critical time is in the critical list
-	std::vector<long>::iterator iter = find(points.begin(),points.end(),val);
+	std::vector<long>::iterator iter = find(critList.begin(),critList.end(),time);
 	//If not in the critical list
-	if (iter == points.end())
+	if (iter == critList.end())
 	{
-		points.push_back(val);
+		critList.push_back(time);
 	}
 	
 }
@@ -172,4 +128,36 @@ void printInputQueue(std::vector<process> q)
 		}
 	}
 	std::cout << "]\n";
+}
+
+//This function gets the user input for memory size and page size
+void getUserInput(int &ms, int &ps) {
+	//Prompt user to input size for the memory (MMU memory size)
+	std::cout << "Memory size >> ";
+	std::cin >> ms;
+	std::cout << "\n";
+
+	//Prompt user to choose the size for the page.
+	do
+	{
+		int pageInput;
+		std::cout << "Page Size (1: 100, 2: 200, 3: 400) >> ";
+		std::cin >> pageInput;
+
+		switch (pageInput)
+		{
+		case 1:
+			ps = 100;
+			break;
+		case 2:
+			ps = 200;
+			break;
+		case 3:
+			ps = 300;
+			break;
+		default:
+			ps = 0;
+			std::cout << "ERROR:  Please enter a valid value (1,2, or 3).\n";
+		}
+	} while (ps == 0);
 }
